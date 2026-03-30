@@ -1,276 +1,381 @@
 # Benchmark Framework
 
-Bu proje, VisDrone veri seti üzerinde eğitilmiş YOLO tabanlı modelleri farklı backend’lerde ortak bir yapı içinde benchmark edebilmek için geliştirilmiştir. Framework; **PyTorch**, **ONNX Runtime**, **TensorRT** ve **RKNN** backend’lerini destekleyecek şekilde modüler olarak tasarlanmıştır.
+PyTorch, ONNX Runtime, TensorRT ve RKNN backend'leri için modüler, konfigürasyon tabanlı benchmark ve otomatik raporlama sistemi.
 
-Amaç, aynı model ailesini farklı çalışma ortamlarında test ederek:
-- doğruluk farklarını,
-- hız ve gecikme profillerini,
-- sistem kaynağı kullanımını
-ortak bir formatta ölçmek ve raporlamaktır.
+Bu proje, farklı model formatlarında çalışan nesne tespit modellerini **aynı veri seti**, **aynı değerlendirme mantığı** ve **aynı raporlama yapısı** ile karşılaştırmak için geliştirilmiştir. Framework; doğruluk, hız/gecikme ve sistem kaynak kullanımı metriklerini tek bir akış altında toplayarak tekrar üretilebilir benchmark senaryoları sunar.
 
 ---
 
-## Temel Özellikler
-
-- Modüler ve OOP tabanlı mimari
-- Config tabanlı çalışma yapısı
-- Çoklu backend desteği
-  - PyTorch (`.pt`)
-  - ONNX Runtime (`.onnx`)
-  - TensorRT (`.engine`)
-  - RKNN (`.rknn`)
-- VisDrone veri seti desteği
-- Accuracy metrikleri
-  - `mAP@0.5`
-  - `mAP@0.5:0.95`
-  - `precision`
-  - `recall`
-- Latency metrikleri
-  - preprocess
-  - inference
-  - postprocess
-  - full pipeline
-- FPS hesaplaması
-- Monitoring
-  - CPU kullanımı
-  - RAM kullanımı
-  - sıcaklık
-- Otomatik raporlama
-  - JSON
-  - CSV
-  - comparison CSV
-  - comparison Markdown
+## İçindekiler
+- [Proje Amacı](#proje-amacı)
+- [Öne Çıkan Özellikler](#öne-çıkan-özellikler)
+- [Desteklenen Backend ve Formatlar](#desteklenen-backend-ve-formatlar)
+- [Veri Seti](#veri-seti)
+- [Mimari Yapı](#mimari-yapı)
+- [Benchmark Akışı](#benchmark-akışı)
+- [Raporlama Yapısı](#raporlama-yapısı)
+- [Önerilen Dizin Yapısı](#önerilen-dizin-yapısı)
+- [Kurulum ve Bağımlılıklar](#kurulum-ve-bağımlılıklar)
+- [Konfigürasyon Mantığı](#konfigürasyon-mantığı)
+- [Örnek Çalıştırma Komutları](#örnek-çalıştırma-komutları)
+- [Karşılaştırma Çıktıları](#karşılaştırma-çıktıları)
+- [Sınırlılıklar](#sınırlılıklar)
+- [Sonuç](#sonuç)
 
 ---
 
-## Proje Yapısı
+## Proje Amacı
 
+Bu framework'ün temel amacı, farklı backend ve model formatlarında çalışan nesne tespit modellerini ortak kurallar altında değerlendirmektir. Sistem, yalnızca modeli çalıştıran basit bir test script'i değildir; aynı zamanda şu bileşenleri tek çatı altında birleştirir:
 
+- veri seti okuma,
+- ön işleme,
+- backend bağımsız inference,
+- son işleme,
+- doğruluk hesaplama,
+- gecikme ve FPS ölçümü,
+- sistem kaynak izleme,
+- standart rapor üretimi.
+
+Bu yapı sayesinde bir modelin yalnızca hızlı olması değil, aynı zamanda ne kadar doğru çalıştığı ve sistem üzerinde nasıl bir yük oluşturduğu da birlikte değerlendirilebilir.
+
+---
+
+## Öne Çıkan Özellikler
+
+### 1) Doğruluk metrikleri
+Framework, COCO tarzı değerlendirme yaklaşımı ile aşağıdaki metrikleri üretir:
+
+- **mAP@0.5**
+- **mAP@0.5:0.95**
+- **Precision**
+- **Recall**
+
+Her benchmark koşusu sonunda bu metrikler `evaluation_summary` altında raporlanır.
+
+### 2) INT8 vs FP16 doğruluk kaybı analizi
+Karşılaştırma araçları içinde yer alan yapı sayesinde, aynı model ailesine ait FP16 ve INT8 çıktıları eşleştirilerek kuantizasyon kaynaklı doğruluk kaybı otomatik olarak raporlanabilir.
+
+### 3) Hız ve gecikme profillemesi
+Toplam süre yerine süreçler ayrı ayrı ölçülür:
+
+- preprocess süresi
+- inference süresi
+- postprocess süresi
+- toplam end-to-end süre
+- ortalama FPS
+
+Bu sayede darboğazın hangi aşamada oluştuğu daha net analiz edilir.
+
+### 4) Donanım ve kaynak izleme
+Benchmark sırasında sistem davranışı da kayıt altına alınır:
+
+- CPU kullanımı
+- sistem RAM kullanımı
+- proses bazlı RAM kullanımı
+- sıcaklık bilgileri
+
+### 5) Çoklu backend desteği
+Framework ortak bir arayüz üzerinden birden fazla backend'i destekleyecek şekilde tasarlanmıştır. Böylece yeni backend veya yeni model aileleri eklemek daha kolay hâle gelir.
+
+### 6) Çoklu formatta raporlama
+Sistem tekil ve çoklu karşılaştırma senaryoları için rapor üretir:
+
+- JSON
+- CSV
+- Markdown
+
+---
+
+## Desteklenen Backend ve Formatlar
+
+Framework aşağıdaki format ve çalışma altyapılarını destekleyecek şekilde yapılandırılmıştır:
+
+- **PyTorch** (`.pt`)
+- **ONNX Runtime** (`.onnx`)
+- **TensorRT engine**
+- **RKNN** (`.rknn`)
+
+Bu yapı, benchmark mantığını belirli bir framework'e bağımlı olmaktan çıkarır ve farklı hedef platformlarda karşılaştırma yapmayı kolaylaştırır.
+
+---
+
+## Veri Seti
+
+Ana veri seti olarak:
+
+- **VisDrone2019-DET-val**
+
+kullanılmaktadır.
+
+Bu veri seti 11 sınıf içermektedir ve framework, VisDrone için ayrı bir dataset loader ile çalışacak şekilde tasarlanmıştır. Sınıflar arasında **boat** da yer almaktadır.
+
+---
+
+## Mimari Yapı
+
+Framework tek parça bir script olarak değil, sorumlulukları ayrılmış modüller şeklinde tasarlanmıştır. Bu yaklaşım bakım, test ve genişletilebilirlik açısından avantaj sağlar.
+
+### Çekirdek bileşenler
+
+#### `ConfigLoader`
+YAML tabanlı benchmark konfigürasyonlarını okur ve doğrular.
+
+#### `Registry`
+Backend adapter'ları, veri setleri ve evaluator bileşenleri için kayıt/çözümleme katmanı sağlar.
+
+#### `BenchmarkRunner`
+Uçtan uca akışı yönetir:
+
+- veri setini yükler,
+- uygun adapter'ı seçer,
+- benchmark sürecini çalıştırır,
+- rapor üretimini tetikler.
+
+#### `ReportBuilder` / comparison tools
+Tekil koşu sonuçlarını standartlaştırır ve çoklu koşu karşılaştırmalarını CSV ile Markdown formatına dönüştürür.
+
+### Adapter katmanı
+
+Her backend için ayrı adapter kullanılır:
+
+- PyTorch adapter
+- ONNX Runtime adapter
+- TensorRT adapter
+- RKNN adapter
+
+Bu adapter'lar kendi backend'lerine özgü yükleme ve inference detaylarını içerir. Üst katman ise tümünü ortak bir `infer()` mantığı ile kullanır.
+
+### Veri seti ve pipeline katmanı
+
+VisDrone veri seti için ayrı dataset sınıfı bulunur. Pipeline tarafında şu işlemler merkezi olarak yönetilir:
+
+- input size
+- letterbox davranışı
+- normalize / resize
+- backend uyumlu tensor dönüşümü
+- bbox / confidence / class ayrıştırma
+- standart prediction objelerine dönüştürme
+
+---
+
+## Benchmark Akışı
+
+Tipik bir benchmark koşusu aşağıdaki sırayla çalışır:
+
+1. YAML konfigürasyon dosyası okunur.
+2. İlgili veri seti yüklenir.
+3. Seçilen backend için adapter başlatılır.
+4. Görüntüler ön işleme katmanından geçirilir.
+5. Model inference çalıştırılır.
+6. Çıktılar postprocess katmanında standart forma dönüştürülür.
+7. Tahminler ground truth ile karşılaştırılır.
+8. Doğruluk, gecikme ve sistem izleme metrikleri toplanır.
+9. Sonuçlar JSON / CSV / Markdown formatlarında raporlanır.
+
+Bu akış sayesinde farklı model ve backend senaryoları tekrar üretilebilir şekilde koşturulabilir.
+
+---
+
+## Raporlama Yapısı
+
+Her benchmark koşusu için standart bir çıktı klasörü oluşturulur. Temel artefakt `report.json` dosyasıdır.
+
+JSON içinde tipik olarak şu ana alanlar yer alır:
+
+- `run_metadata`
+- `dataset_metadata`
+- `evaluation_summary`
+- `latency_summary`
+- `monitoring_summary`
+
+### `run_metadata`
+Çalıştırılan benchmark'ın kimliğini taşır.
+
+Örnek bilgiler:
+- run adı
+- backend
+- precision
+- device
+
+### `dataset_metadata`
+Veri setine ait temel bilgileri içerir.
+
+### `evaluation_summary`
+Doğruluk metriklerini içerir:
+- mAP@0.5
+- mAP@0.5:0.95
+- precision
+- recall
+
+### `latency_summary`
+Performans metriklerini içerir:
+- preprocess süresi
+- inference süresi
+- postprocess süresi
+- toplam süre
+- FPS
+
+### `monitoring_summary`
+Benchmark sırasında toplanan sistem bilgilerini içerir:
+- CPU
+- RAM
+- sıcaklık
+- proses belleği
+- zaman damgaları
+
+---
+
+## Önerilen Dizin Yapısı
+
+```bash
 benchmark_framework/
 ├── benchmark/
-│   ├── adapters/
-│   ├── core/
-│   ├── datasets/
-│   ├── evaluators/
-│   ├── monitors/
-│   ├── pipelines/
-│   ├── profilers/
-│   ├── reporters/
-│   ├── schemas/
-│   └── tools/
+│   ├── core/          # runner, registry, config loader
+│   ├── adapters/      # pytorch, onnxruntime, tensorrt, rknn
+│   ├── datasets/      # visdrone dataset loader
+│   ├── evaluators/    # COCO tarzı metric hesaplayıcılar
+│   ├── profilers/     # timer profiler vb.
+│   ├── monitors/      # cpu/ram/sıcaklık izleme
+│   ├── reporters/     # json/csv/markdown raporlama
+│   └── tools/         # compare_runs gibi yardımcı araçlar
 ├── configs/
-│   └── runs/
+│   └── runs/          # her benchmark senaryosu için yaml
+├── data/
+│   └── VisDrone2019-DET-val/
+├── models/
 ├── outputs/
 │   ├── runs/
 │   └── comparisons/
-└── models/
+└── README.md
+```
 
+---
 
-## Mimari Yaklaşım
+## Kurulum ve Bağımlılıklar
 
-Framework, her backend için ortak bir arayüz sunacak şekilde tasarlanmıştır. Böylece aynı benchmark akışı, yalnızca config değiştirilerek farklı model formatları üzerinde çalıştırılabilir.
+Temel çalışma ortamı:
 
-Genel akış şu şekildedir:
+- **Ubuntu**
+- **Python 3.10+**
 
-Config dosyası okunur
-İlgili backend adapter’ı yüklenir
-Veri seti loader başlatılır
-Pipeline üzerinden inference yapılır
-Accuracy, latency ve monitoring verileri toplanır
-Sonuçlar JSON / CSV / Markdown formatında raporlanır
+Başlıca bağımlılıklar:
 
-Bu yapı sayesinde yeni bir backend veya yeni bir veri seti desteği eklemek, mevcut sistemi bozmadan gerçekleştirilebilir.
+- `ultralytics`
+- `torch`
+- `onnxruntime`
+- TensorRT Python binding'leri
+- RKNN toolkit / lite bileşenleri
+- `opencv-python`
+- `numpy`
+- `PyYAML`
+- `psutil`
 
-## Çalışma Mantığı
+> Not: Özellikle TensorRT ve RKNN tarafında sürüm uyumlulukları dikkatle yönetilmelidir.
 
-Framework içindeki benchmark süreci temel olarak dört ana aşamadan oluşur:
+Örnek kurulum:
 
-1. Veri Hazırlama
+```bash
+python3 -m venv .venv
+source .venv/bin/activate
+pip install --upgrade pip
+pip install numpy opencv-python pyyaml psutil ultralytics torch onnxruntime
+```
 
-Bu aşamada VisDrone veri seti okunur, görüntüler ve etiketler benchmark sürecine uygun hale getirilir. Gerekli ön işleme adımları burada uygulanır.
+> TensorRT ve RKNN bağımlılıkları platforma göre ayrıca kurulmalıdır.
 
-2. Model Çıkarımı
+---
 
-Seçilen backend’e göre uygun adapter devreye girer ve model inference işlemi gerçekleştirilir. Bu aşamada preprocess, inference ve postprocess süreleri ayrı ayrı ölçülür.
+## Konfigürasyon Mantığı
 
-3. Değerlendirme
+Framework'te run mantığı YAML dosyaları üzerinden yönetilir. Her senaryo için ayrı bir Python script'i yazmak yerine aşağıdaki bilgiler config üzerinden belirlenir:
 
-Model çıktıları ground-truth etiketlerle karşılaştırılır. Bu sayede doğruluk metrikleri hesaplanır:
-mAP@0.5
-mAP@0.5:0.95
-precision
-recall
+- model yolu
+- backend tipi
+- device
+- precision
+- input size
+- class names
+- veri seti yolu
+- çıktı klasörleri
 
-4. Raporlama
+Bu yaklaşımın avantajları:
 
-Toplanan tüm performans verileri standart bir formatta dışa aktarılır. Böylece farklı koşullarda yapılan testler kolayca karşılaştırılabilir.
+- yeni benchmark senaryosu eklemek kolaylaşır,
+- kod içindeki sabit path kullanımı azalır,
+- tekrar üretilebilirlik artar,
+- backend değişiklikleri daha kontrollü yapılır.
 
+---
 
-## Desteklenen Backend Yapısı
+## Örnek Çalıştırma Komutları
 
-Her backend için ayrı bir adapter katmanı bulunmaktadır. Bu katmanların amacı, farklı inference motorlarını ortak bir arayüz altında toplamaktır.
+```bash
+python3 -m benchmark.cli.main --config configs/runs/yolo26nvisdroneboat_pytorch_cpu_fp32.yaml
+python3 -m benchmark.cli.main --config configs/runs/yolo26nvisdroneboat_onnxruntime_cpu_fp32.yaml
+python3 -m benchmark.cli.main --config configs/runs/yolo26nvisdroneboat_tensorrt_cuda_fp32.yaml
+python3 -m benchmark.cli.main --config configs/runs/yolo26nvisdroneboat_tensorrt_cuda_fp16.yaml
+python3 -m benchmark.cli.main --config configs/runs/yolo26nvisdroneboat_tensorrt_cuda_int8.yaml
+```
 
-PyTorch Adapter
+Geliştirme sürecinde kullanılan örnek run senaryoları:
 
-.pt uzantılı modelleri yükler ve PyTorch üzerinden inference çalıştırır.
+- `yolo26nvisdroneboat_pytorch_cpu_fp32`
+- `yolo26nvisdroneboat_onnxruntime_cpu_fp32`
+- `yolo26nvisdroneboat_tensorrt_cuda_fp32`
+- `yolo26nvisdroneboat_tensorrt_cuda_fp16`
+- `yolo26nvisdroneboat_tensorrt_cuda_int8`
+- `yolo26nvisdroneboat_rknn_rk3588`
 
-ONNX Runtime Adapter
+---
 
-.onnx modeller için ONNX Runtime kullanır. CPU veya uygun olduğu durumda farklı execution provider’lar ile genişletilebilir.
+## Karşılaştırma Çıktıları
 
-TensorRT Adapter
+Tekil run raporlarının yanında framework, çoklu koşuların karşılaştırılmasını da destekler.
 
-.engine formatındaki optimize edilmiş modellerin NVIDIA GPU üzerinde yüksek performansla çalıştırılmasını sağlar.
+Bu amaçla seçilen `report.json` dosyaları işlenerek şu çıktılar üretilebilir:
 
-RKNN Adapter
+- `comparison_summary.csv`
+- `comparison_report.md`
 
-.rknn modellerin RK3588 gibi Rockchip NPU tabanlı cihazlarda test edilmesini hedefler.
+Bu sayede şu senaryolar tek tabloda karşılaştırılabilir:
 
-## Config Yapısı
+- PyTorch
+- ONNX Runtime
+- TensorRT FP32
+- TensorRT FP16
+- TensorRT INT8
+- RKNN
 
-Framework’ün temel çalışma mantığı config tabanlıdır. Her benchmark çalışması ayrı bir YAML dosyası ile tanımlanır. Bu yapı sayesinde kod değiştirmeden farklı model, backend, cihaz ve veri seti kombinasyonları test edilebilir.
+Bu karşılaştırmalar özellikle şu sorular için faydalıdır:
 
-Örnek config yapısı:
+- En yüksek doğruluk hangi backend'te?
+- En düşük gecikme hangi precision seviyesinde?
+- INT8 dönüşümünün doğruluk kaybı ne kadar?
+- Donanım üzerindeki yük nasıl değişiyor?
 
-run:
-  name: yolo26nvisdroneboat_onnxruntime_cpu_fp32
-  output_root: ./outputs/runs
-  global_summary_path: ./outputs/comparisons/all_runs_summary.csv
+---
 
-task:
-  type: detection
-  model_family: yolo
+## Sınırlılıklar
 
-model:
-  name: yolo26_visdroneboat
-  format: onnx
-  path: /home/merve/benchmark_framework/models/yolo26nvisdroneboat.onnx
-  precision: fp32
-  input_size: [640, 640]
-  class_names:
-    - pedestrian
-    - people
-    - bicycle
-    - car
-    - van
-    - truck
-    - tricycle
-    - awning-tricycle
-    - bus
-    - motor
-    - boat
+Framework'ün ana gereksinimleri büyük ölçüde karşılanmış olsa da bazı alanlar hâlâ genişletilebilir durumdadır:
 
-backend:
-  type: onnxruntime
-  device: cpu
+- Tracy ile tam fonksiyon seviyesinde enstrümantasyon henüz temel kullanım seviyesinde / opsiyoneldir.
+- Tüm platformlar için standart NPU yük metriği henüz tek tip değildir.
+- Tüm model ailelerine uygulanabilecek tamamen genel bir postprocess şablonu henüz daha fazla genişletmeye açıktır.
 
-dataset:
-  type: visdrone
-  root_dir: /home/merve/benchmark_framework/data/VisDrone2019-DET-val
-  split: val
+Bununla birlikte mevcut mimari, yeni backend, evaluator ve raporlama tipleri eklemeye uygundur.
 
-Bu yapı ileride farklı dataset tipleri ve backend seçenekleri için genişletilebilir şekilde düşünülmüştür.
+---
 
-## Üretilen Çıktılar
+## Sonuç
 
-Her benchmark çalışması sonunda ilgili run klasörü altında ayrıntılı çıktı dosyaları oluşturulur.
+Bu benchmark framework; farklı model formatlarını ortak kurallar altında değerlendiren, tekrar üretilebilir, konfigürasyon tabanlı ve rapor odaklı bir altyapı sunar. VisDrone üzerinde eğitilmiş YOLO modelleri ile başlatılan sistem, ileride farklı veri setleri ve model ailelerine genişleyebilecek şekilde tasarlanmıştır.
 
-Örnek çıktı yapısı:
+En güçlü yönü; **doğruluk**, **hız/gecikme** ve **kaynak kullanımı** verilerini aynı benchmark akışında ve aynı rapor yapısında bir araya getirmesidir. Bu sayede sistem, tek modele özel dağınık script'ler yerine bakım yapılabilir ve profesyonel bir benchmark iskeleti hâline gelmiştir.
 
-outputs/
-├── runs/
-│   └── yolo26nvisdroneboat_onnxruntime_cpu_fp32/
-│       ├── run_summary.json
-│       ├── run_summary.csv
-│       ├── latency_profile.json
-│       ├── monitoring.json
-│       ├── accuracy.json
-│       └── report.md
-└── comparisons/
-    ├── all_runs_summary.csv
-    └── comparison_report.md
+---
 
-## Çıktı Dosyalarının İçeriği
+## Kısa Özet
 
-run_summary.json
-Tek bir benchmark çalışmasının tüm özet metriklerini içerir.
-run_summary.csv
-Sonuçların tablo halinde saklanmasını sağlar.
-latency_profile.json
-Preprocess, inference, postprocess ve full pipeline sürelerini içerir.
-monitoring.json
-CPU, RAM ve sıcaklık gibi sistem bilgilerini içerir.
-accuracy.json
-mAP, precision ve recall gibi doğruluk metriklerini içerir.
-report.md
-İnsan tarafından okunabilir özet benchmark raporudur.
-all_runs_summary.csv
-Tüm benchmark çalışmaları için ortak karşılaştırma tablosu oluşturur.
-comparison_report.md
-Farklı run’ların toplu karşılaştırmasını Markdown formatında sunar.
-
-## Ölçülen Metrikler
-
-Framework üç ana kategori altında metrik üretir:
-
-1. Doğruluk Metrikleri
-
-Modelin veri seti üzerindeki algılama başarısını ölçer.
-
-mAP@0.5
-mAP@0.5:0.95
-precision
-recall
-
-2. Performans Metrikleri
-
-Pipeline’ın farklı aşamalarındaki süreleri ölçer.
-
-preprocess latency
-inference latency
-postprocess latency
-full pipeline latency
-FPS
-
-3. Sistem Kaynak Kullanımı
-
-Model çalışırken sistem üzerindeki yükü gözlemlemeyi amaçlar.
-
-CPU kullanım yüzdesi
-RAM kullanımı
-sıcaklık bilgisi
-Genişletilebilirlik
-
-Framework başlangıçta VisDrone ve YOLO tabanlı modeller odak alınarak tasarlanmıştır. Ancak mimari, ileride aşağıdaki genişletmelere uygundur:
-
-yeni veri setleri ekleme
-yeni backend adapter’ları ekleme
-classification / segmentation gibi yeni görev tipleri ekleme
-farklı monitoring kaynakları ekleme
-daha detaylı profiler entegrasyonları ekleme
-
-Bu sayede proje yalnızca tek bir benchmark senaryosuna değil, daha genel bir model değerlendirme altyapısına dönüşebilecek şekilde kurgulanmıştır.
-
-## Hedef Kullanım Senaryosu
-
-Bu framework özellikle aşağıdaki ihtiyaçlara cevap vermek için geliştirilmiştir:
-
-Aynı modelin farklı formatlardaki performansını karşılaştırmak
-FP32 / FP16 / INT8 gibi hassasiyet seviyeleri arasındaki farkı gözlemlemek
-Edge cihazlar ile masaüstü sistemleri aynı raporlama mantığında değerlendirmek
-Eğitim sonrası model optimizasyonlarının doğruluk ve hız üzerindeki etkisini ölçmek
-Tekrarlanabilir ve standart benchmark sonuçları elde etmek
-
-## Sonraki Geliştirmeler
-
-Planlanan sonraki geliştirmeler şunlardır:
-
-RKNN backend entegrasyonunun tamamlanması
-TensorRT profiler detaylarının artırılması
-comparison Markdown raporlarının otomatik grafiklerle desteklenmesi
-çoklu run batch benchmark desteği
-CLI komut yapısının geliştirilmesi
-görselleştirilmiş benchmark özetleri
-Genel Değerlendirme
-
-Bu benchmark framework, farklı backend’lerde çalışan YOLO tabanlı modellerin ortak bir yapı içinde değerlendirilmesini amaçlayan modüler bir altyapı sunmaktadır. Proje sayesinde doğruluk, hız ve sistem kullanımı tek bir standartta ölçülerek farklı çalışma ortamları arasında daha sağlıklı karşılaştırmalar yapılabilecektir. Özellikle edge AI, optimize inference ve backend karşılaştırma çalışmalarında tekrar kullanılabilir bir temel oluşturması hedeflenmektedir.
+Bu proje, PyTorch, ONNX Runtime, TensorRT ve RKNN backend'lerinde çalışan nesne tespit modellerini VisDrone veri seti üzerinde ortak bir standartla kıyaslamak için geliştirilmiş modüler bir benchmark framework'üdür. Sistem; doğruluk metrikleri, gecikme/FPS ölçümleri, kaynak izleme ve otomatik raporlama yeteneklerini bir araya getirerek araştırma ve ürünleştirme süreçlerinde kullanılabilecek tekrar üretilebilir bir değerlendirme altyapısı sağlar.
