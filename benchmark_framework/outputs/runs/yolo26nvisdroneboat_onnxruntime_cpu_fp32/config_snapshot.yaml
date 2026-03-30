@@ -1,0 +1,77 @@
+run:
+  name: yolo26nvisdroneboat_onnxruntime_cpu_fp32
+  output_root: ./outputs/runs
+  global_summary_path: ./outputs/comparisons/all_runs_summary.csv
+task:
+  type: detection
+  model_family: yolo
+model:
+  name: yolo26nvisdroneboat
+  format: onnx
+  path: /home/merve/benchmark_framework/models/yolo26nvisdroneboat_fp32.onnx
+  precision: fp32
+  input_size:
+  - 640
+  - 640
+  class_names:
+  - pedestrian
+  - people
+  - bicycle
+  - car
+  - van
+  - truck
+  - tricycle
+  - awning-tricycle
+  - bus
+  - motor
+  - boat
+backend:
+  type: onnxruntime
+  device: cpu
+dataset:
+  type: visdrone
+  root_dir: /home/merve/benchmark_framework/data/VisDrone2019-DET-val
+  split: val
+  image_dir: /home/merve/benchmark_framework/data/VisDrone2019-DET-val/images
+  annotation_dir: /home/merve/benchmark_framework/data/VisDrone2019-DET-val/annotations
+pipeline:
+  preprocess:
+    letterbox: true
+    normalize: true
+    color_format: rgb
+  postprocess:
+    conf_threshold: 0.25
+    iou_threshold: 0.45
+    max_det: 300
+benchmark:
+  warmup_iters: 3
+  batch_size: 1
+  max_samples: 50
+profiling:
+  enabled: true
+  profiler_type: timer
+monitoring:
+  enabled: true
+  system: true
+  thermal: true
+  sample_interval_ms: 100
+reporting:
+  formats:
+  - json
+  - csv
+evaluation:
+  iou_thresholds:
+  - 0.5
+  - 0.55
+  - 0.6
+  - 0.65
+  - 0.7
+  - 0.75
+  - 0.8
+  - 0.85
+  - 0.9
+  - 0.95
+visualization:
+  enabled: false
+  show_window: false
+  wait_key_ms: 1

@@ -1,0 +1,1 @@
+pairing_key,model_name,backend_type,dataset_name,input_size,fp16_run_name,int8_run_name,fp16_report_path,int8_report_path,fp16_precision_metric,int8_precision_metric,precision_loss,fp16_recall,int8_recall,recall_loss,fp16_map50,int8_map50,map50_loss,fp16_map50_95,int8_map50_95,map50_95_loss

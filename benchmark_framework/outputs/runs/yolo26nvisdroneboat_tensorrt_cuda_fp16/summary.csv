@@ -1,0 +1,2 @@
+run_name,task_type,backend,precision_mode,dataset_type,split,num_images,num_predictions,num_ground_truths,tp,fp,fn,precision,recall,map_50,map_50_95,avg_full_pipeline_ms,avg_image_read_ms,avg_preprocess_ms,avg_inference_ms,avg_postprocess_ms,avg_fps,inference_fps,monitor_count,output_dir
+yolo26nvisdroneboat_tensorrt_cuda_fp16,detection,tensorrt,fp16,visdrone,val,548,1190,2467,800,390,1667,0.672269,0.324281,0.206555,0.143312,5.7738,0.004,0.0023,5.558,0.171,173.1962,179.9208,8,outputs/runs/yolo26nvisdroneboat_tensorrt_cuda_fp16

@@ -1,0 +1,338 @@
+{
+  "run_metadata": {
+    "run_name": "yolo26nvisdroneboat_rknn_rk3588",
+    "task_type": "detection",
+    "backend": "rknn",
+    "precision": "unknown",
+    "output_dir": "outputs/runs/yolo26nvisdroneboat_rknn_rk3588_unknown"
+  },
+  "dataset_metadata": {
+    "dataset_type": "visdrone",
+    "split": "val",
+    "num_images": 548,
+    "num_classes": 11,
+    "image_dir": "/home/uav/benchmark_framework/data/VisDrone2019-DET-val/images",
+    "annotation_dir": "/home/uav/benchmark_framework/data/VisDrone2019-DET-val/annotations"
+  },
+  "evaluation_summary": {
+    "status": "coco_style_evaluation_ready",
+    "num_predictions": 392,
+    "num_ground_truths": 1066,
+    "tp": 246,
+    "fp": 146,
+    "fn": 820,
+    "precision": 0.627551,
+    "recall": 0.230769,
+    "map_50": 0.103161,
+    "map_50_95": 0.066766,
+    "iou_thresholds": [
+      0.5,
+      0.55,
+      0.6,
+      0.65,
+      0.7,
+      0.75,
+      0.8,
+      0.85,
+      0.9,
+      0.95
+    ]
+  },
+  "latency_summary": {
+    "stage_breakdown_ms": {
+      "image_read": {
+        "mean": 0.002,
+        "min": 0.0015,
+        "max": 0.0035,
+        "count": 10
+      },
+      "preprocess": {
+        "mean": 4.0524,
+        "min": 2.7974,
+        "max": 4.3269,
+        "count": 10
+      },
+      "inference": {
+        "mean": 44.2084,
+        "min": 42.8237,
+        "max": 46.94,
+        "count": 10
+      },
+      "postprocess": {
+        "mean": 2.3693,
+        "min": 1.3099,
+        "max": 5.5545,
+        "count": 10
+      },
+      "full_pipeline": {
+        "mean": 50.6539,
+        "min": 48.5039,
+        "max": 54.8112,
+        "count": 10
+      }
+    },
+    "extra_values": {
+      "num_predictions": {
+        "mean": 39.2,
+        "min": 10,
+        "max": 72,
+        "count": 10
+      }
+    },
+    "inference_fps": 22.6201,
+    "avg_fps": 19.7418
+  },
+  "monitoring_summary": {
+    "monitor_0": {
+      "sample_count": 4,
+      "sampling_interval_ms": 500,
+      "cpu_percent": {
+        "mean": 5.525,
+        "min": 0.0,
+        "peak": 12.1
+      },
+      "process_ram_mb": {
+        "mean": 357.2051,
+        "min": 321.4375,
+        "peak": 377.8125
+      },
+      "system_ram_used_mb": {
+        "mean": 1394.9248,
+        "min": 1364.3398,
+        "peak": 1413.6562
+      },
+      "system_ram_percent": {
+        "mean": 19.325,
+        "min": 18.9,
+        "peak": 19.6
+      },
+      "temperature_c": {
+        "mean": 29.8457,
+        "min": 28.692,
+        "peak": 30.538
+      }
+    }
+  },
+  "classwise_metrics": {
+    "pedestrian": {
+      "ap50": 0.067681,
+      "ap50_95": 0.018711,
+      "tp": 35,
+      "fp": 107,
+      "fn": 161,
+      "precision": 0.246479,
+      "recall": 0.178571,
+      "num_predictions": 142,
+      "num_ground_truths": 196
+    },
+    "people": {
+      "ap50": 0.0,
+      "ap50_95": 0.0,
+      "tp": 0,
+      "fp": 0,
+      "fn": 220,
+      "precision": 0.0,
+      "recall": 0.0,
+      "num_predictions": 0,
+      "num_ground_truths": 220
+    },
+    "bicycle": {
+      "ap50": 0.0,
+      "ap50_95": 0.0,
+      "tp": 0,
+      "fp": 0,
+      "fn": 21,
+      "precision": 0.0,
+      "recall": 0.0,
+      "num_predictions": 0,
+      "num_ground_truths": 21
+    },
+    "car": {
+      "ap50": 0.729405,
+      "ap50_95": 0.508782,
+      "tp": 188,
+      "fp": 15,
+      "fn": 61,
+      "precision": 0.926108,
+      "recall": 0.75502,
+      "num_predictions": 203,
+      "num_ground_truths": 249
+    },
+    "van": {
+      "ap50": 0.071782,
+      "ap50_95": 0.05165,
+      "tp": 3,
+      "fp": 11,
+      "fn": 9,
+      "precision": 0.214286,
+      "recall": 0.25,
+      "num_predictions": 14,
+      "num_ground_truths": 12
+    },
+    "truck": {
+      "ap50": 0.0,
+      "ap50_95": 0.0,
+      "tp": 0,
+      "fp": 1,
+      "fn": 1,
+      "precision": 0.0,
+      "recall": 0.0,
+      "num_predictions": 1,
+      "num_ground_truths": 1
+    },
+    "tricycle": {
+      "ap50": 0.0,
+      "ap50_95": 0.0,
+      "tp": 0,
+      "fp": 2,
+      "fn": 28,
+      "precision": 0.0,
+      "recall": 0.0,
+      "num_predictions": 2,
+      "num_ground_truths": 28
+    },
+    "awning-tricycle": {
+      "ap50": 0.0,
+      "ap50_95": 0.0,
+      "tp": 0,
+      "fp": 1,
+      "fn": 35,
+      "precision": 0.0,
+      "recall": 0.0,
+      "num_predictions": 1,
+      "num_ground_truths": 35
+    },
+    "motor": {
+      "ap50": 0.059576,
+      "ap50_95": 0.021749,
+      "tp": 20,
+      "fp": 9,
+      "fn": 284,
+      "precision": 0.689655,
+      "recall": 0.065789,
+      "num_predictions": 29,
+      "num_ground_truths": 304
+    }
+  },
+  "artifacts": {},
+  "debug_info": {
+    "raw_output_examples": [
+      {
+        "type": "<class 'numpy.ndarray'>",
+        "shape": [
+          1,
+          15,
+          8400
+        ]
+      },
+      {
+        "type": "<class 'numpy.ndarray'>",
+        "shape": [
+          1,
+          15,
+          8400
+        ]
+      },
+      {
+        "type": "<class 'numpy.ndarray'>",
+        "shape": [
+          1,
+          15,
+          8400
+        ]
+      }
+    ]
+  },
+  "config_snapshot": {
+    "run": {
+      "name": "yolo26nvisdroneboat_rknn_rk3588",
+      "output_root": "./outputs/runs",
+      "global_summary_path": "./outputs/comparisons/all_runs_summary.csv"
+    },
+    "task": {
+      "type": "detection",
+      "model_family": "yolo"
+    },
+    "model": {
+      "name": "yolo26nvisdroneboat",
+      "format": "rknn",
+      "path": "/home/uav/benchmark_framework/models/yolo26nvisdroneboat.rknn",
+      "precision": "unknown",
+      "input_size": [
+        640,
+        640
+      ],
+      "class_names": [
+        "pedestrian",
+        "people",
+        "bicycle",
+        "car",
+        "van",
+        "truck",
+        "tricycle",
+        "awning-tricycle",
+        "bus",
+        "motor",
+        "boat"
+      ]
+    },
+    "backend": {
+      "type": "rknn",
+      "device": "rk3588"
+    },
+    "dataset": {
+      "type": "visdrone",
+      "root_dir": "/home/uav/benchmark_framework/data/VisDrone2019-DET-val",
+      "split": "val",
+      "image_dir": "/home/uav/benchmark_framework/data/VisDrone2019-DET-val/images",
+      "annotation_dir": "/home/uav/benchmark_framework/data/VisDrone2019-DET-val/annotations"
+    },
+    "pipeline": {
+      "preprocess": {
+        "letterbox": false,
+        "normalize": false,
+        "color_format": "rgb"
+      },
+      "postprocess": {
+        "conf_threshold": 0.3,
+        "iou_threshold": 0.45,
+        "max_det": 300
+      }
+    },
+    "benchmark": {
+      "warmup_iters": 3,
+      "batch_size": 1,
+      "max_samples": 10
+    },
+    "profiling": {
+      "enabled": true,
+      "profiler_type": "timer"
+    },
+    "monitoring": {
+      "enabled": true,
+      "system": true,
+      "thermal": true,
+      "sample_interval_ms": 500
+    },
+    "reporting": {
+      "formats": [
+        "json",
+        "csv"
+      ]
+    },
+    "evaluation": {
+      "iou_thresholds": [
+        0.5,
+        0.55,
+        0.6,
+        0.65,
+        0.7,
+        0.75,
+        0.8,
+        0.85,
+        0.9,
+        0.95
+      ]
+    }
+  }
+}

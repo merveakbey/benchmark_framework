@@ -1,0 +1,2 @@
+run_name,task_type,backend,precision_mode,dataset_type,split,num_images,num_predictions,num_ground_truths,tp,fp,fn,precision,recall,map_50,map_50_95,avg_full_pipeline_ms,avg_image_read_ms,avg_preprocess_ms,avg_inference_ms,avg_postprocess_ms,avg_fps,inference_fps,monitor_count,output_dir
+yolo26nvisdroneboat_pytorch_cpu_fp32,detection,pytorch,fp32,visdrone,val,548,369,1066,245,124,821,0.663957,0.229831,0.109154,0.068656,58.6101,0.0013,1.7583,56.5348,0.2755,17.0619,17.6882,3,outputs/runs/yolo26nvisdroneboat_pytorch_cpu_fp32

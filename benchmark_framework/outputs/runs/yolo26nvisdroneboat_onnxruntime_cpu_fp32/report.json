@@ -1,0 +1,372 @@
+{
+  "run_metadata": {
+    "run_name": "yolo26nvisdroneboat_onnxruntime_cpu_fp32",
+    "task_type": "detection",
+    "backend": "onnxruntime",
+    "precision": "fp32",
+    "model_name": "yolo26nvisdroneboat",
+    "model_path": "/home/merve/benchmark_framework/models/yolo26nvisdroneboat_fp32.onnx",
+    "dataset_name": "visdrone",
+    "input_size": [
+      640,
+      640
+    ],
+    "output_dir": "outputs/runs/yolo26nvisdroneboat_onnxruntime_cpu_fp32"
+  },
+  "dataset_metadata": {
+    "dataset_type": "visdrone",
+    "split": "val",
+    "num_images": 548,
+    "num_classes": 11,
+    "image_dir": "/home/merve/benchmark_framework/data/VisDrone2019-DET-val/images",
+    "annotation_dir": "/home/merve/benchmark_framework/data/VisDrone2019-DET-val/annotations"
+  },
+  "evaluation_summary": {
+    "status": "coco_style_evaluation_ready",
+    "num_predictions": 1342,
+    "num_ground_truths": 2467,
+    "tp": 634,
+    "fp": 708,
+    "fn": 1833,
+    "precision": 0.472429,
+    "recall": 0.256992,
+    "map_50": 0.149764,
+    "map_50_95": 0.104615,
+    "iou_thresholds": [
+      0.5,
+      0.55,
+      0.6,
+      0.65,
+      0.7,
+      0.75,
+      0.8,
+      0.85,
+      0.9,
+      0.95
+    ]
+  },
+  "latency_summary": {
+    "stage_breakdown_ms": {
+      "image_read": {
+        "mean": 0.0017,
+        "min": 0.0009,
+        "max": 0.0033,
+        "count": 50
+      },
+      "preprocess": {
+        "mean": 2.1639,
+        "min": 1.4142,
+        "max": 3.3277,
+        "count": 50
+      },
+      "inference": {
+        "mean": 45.1299,
+        "min": 30.427,
+        "max": 83.5562,
+        "count": 50
+      },
+      "postprocess": {
+        "mean": 0.3273,
+        "min": 0.2114,
+        "max": 0.7738,
+        "count": 50
+      },
+      "full_pipeline": {
+        "mean": 47.6739,
+        "min": 32.6757,
+        "max": 86.0084,
+        "count": 50
+      }
+    },
+    "extra_values": {
+      "num_predictions": {
+        "mean": 26.84,
+        "min": 4,
+        "max": 126,
+        "count": 50
+      }
+    },
+    "inference_fps": 22.1583,
+    "avg_fps": 20.9758
+  },
+  "monitoring_summary": {
+    "monitor_0": {
+      "sample_count": 23,
+      "sampling_interval_ms": 100,
+      "cpu_percent": {
+        "mean": 93.6609,
+        "min": 0.0,
+        "peak": 100.0
+      },
+      "process_ram_mb": {
+        "mean": 622.8935,
+        "min": 517.543,
+        "peak": 634.6484
+      },
+      "system_ram_used_mb": {
+        "mean": 5198.0859,
+        "min": 5129.2734,
+        "peak": 5221.9258
+      },
+      "system_ram_percent": {
+        "mean": 39.7696,
+        "min": 39.3,
+        "peak": 39.9
+      },
+      "temperature_c": {
+        "mean": 89.2554,
+        "min": 82.5,
+        "peak": 92.75
+      }
+    }
+  },
+  "classwise_metrics": {
+    "pedestrian": {
+      "ap50": 0.153935,
+      "ap50_95": 0.043568,
+      "tp": 283,
+      "fp": 595,
+      "fn": 683,
+      "precision": 0.322323,
+      "recall": 0.292961,
+      "num_predictions": 878,
+      "num_ground_truths": 966
+    },
+    "people": {
+      "ap50": 0.005941,
+      "ap50_95": 0.002673,
+      "tp": 3,
+      "fp": 3,
+      "fn": 482,
+      "precision": 0.5,
+      "recall": 0.006186,
+      "num_predictions": 6,
+      "num_ground_truths": 485
+    },
+    "bicycle": {
+      "ap50": 0.0,
+      "ap50_95": 0.0,
+      "tp": 0,
+      "fp": 0,
+      "fn": 54,
+      "precision": 0.0,
+      "recall": 0.0,
+      "num_predictions": 0,
+      "num_ground_truths": 54
+    },
+    "car": {
+      "ap50": 0.68374,
+      "ap50_95": 0.496362,
+      "tp": 310,
+      "fp": 68,
+      "fn": 118,
+      "precision": 0.820106,
+      "recall": 0.724299,
+      "num_predictions": 378,
+      "num_ground_truths": 428
+    },
+    "van": {
+      "ap50": 0.244049,
+      "ap50_95": 0.198952,
+      "tp": 11,
+      "fp": 22,
+      "fn": 20,
+      "precision": 0.333333,
+      "recall": 0.354839,
+      "num_predictions": 33,
+      "num_ground_truths": 31
+    },
+    "truck": {
+      "ap50": 0.484268,
+      "ap50_95": 0.371969,
+      "tp": 5,
+      "fp": 6,
+      "fn": 4,
+      "precision": 0.454545,
+      "recall": 0.555556,
+      "num_predictions": 11,
+      "num_ground_truths": 9
+    },
+    "tricycle": {
+      "ap50": 0.029703,
+      "ap50_95": 0.023762,
+      "tp": 1,
+      "fp": 1,
+      "fn": 41,
+      "precision": 0.5,
+      "recall": 0.02381,
+      "num_predictions": 2,
+      "num_ground_truths": 42
+    },
+    "awning-tricycle": {
+      "ap50": 0.0,
+      "ap50_95": 0.0,
+      "tp": 0,
+      "fp": 2,
+      "fn": 39,
+      "precision": 0.0,
+      "recall": 0.0,
+      "num_predictions": 2,
+      "num_ground_truths": 39
+    },
+    "bus": {
+      "ap50": 0.0,
+      "ap50_95": 0.0,
+      "tp": 0,
+      "fp": 1,
+      "fn": 0,
+      "precision": 0.0,
+      "recall": 0.0,
+      "num_predictions": 1,
+      "num_ground_truths": 0
+    },
+    "motor": {
+      "ap50": 0.045773,
+      "ap50_95": 0.013478,
+      "tp": 21,
+      "fp": 10,
+      "fn": 391,
+      "precision": 0.677419,
+      "recall": 0.050971,
+      "num_predictions": 31,
+      "num_ground_truths": 412
+    },
+    "boat": {
+      "ap50": 0.0,
+      "ap50_95": 0.0,
+      "tp": 0,
+      "fp": 0,
+      "fn": 1,
+      "precision": 0.0,
+      "recall": 0.0,
+      "num_predictions": 0,
+      "num_ground_truths": 1
+    }
+  },
+  "artifacts": {},
+  "debug_info": {
+    "raw_output_examples": [
+      {
+        "type": "<class 'numpy.ndarray'>",
+        "shape": [
+          1,
+          300,
+          6
+        ]
+      },
+      {
+        "type": "<class 'numpy.ndarray'>",
+        "shape": [
+          1,
+          300,
+          6
+        ]
+      },
+      {
+        "type": "<class 'numpy.ndarray'>",
+        "shape": [
+          1,
+          300,
+          6
+        ]
+      }
+    ]
+  },
+  "config_snapshot": {
+    "run": {
+      "name": "yolo26nvisdroneboat_onnxruntime_cpu_fp32",
+      "output_root": "./outputs/runs",
+      "global_summary_path": "./outputs/comparisons/all_runs_summary.csv"
+    },
+    "task": {
+      "type": "detection",
+      "model_family": "yolo"
+    },
+    "model": {
+      "name": "yolo26nvisdroneboat",
+      "format": "onnx",
+      "path": "/home/merve/benchmark_framework/models/yolo26nvisdroneboat_fp32.onnx",
+      "precision": "fp32",
+      "input_size": [
+        640,
+        640
+      ],
+      "class_names": [
+        "pedestrian",
+        "people",
+        "bicycle",
+        "car",
+        "van",
+        "truck",
+        "tricycle",
+        "awning-tricycle",
+        "bus",
+        "motor",
+        "boat"
+      ]
+    },
+    "backend": {
+      "type": "onnxruntime",
+      "device": "cpu"
+    },
+    "dataset": {
+      "type": "visdrone",
+      "root_dir": "/home/merve/benchmark_framework/data/VisDrone2019-DET-val",
+      "split": "val",
+      "image_dir": "/home/merve/benchmark_framework/data/VisDrone2019-DET-val/images",
+      "annotation_dir": "/home/merve/benchmark_framework/data/VisDrone2019-DET-val/annotations"
+    },
+    "pipeline": {
+      "preprocess": {
+        "letterbox": true,
+        "normalize": true,
+        "color_format": "rgb"
+      },
+      "postprocess": {
+        "conf_threshold": 0.25,
+        "iou_threshold": 0.45,
+        "max_det": 300
+      }
+    },
+    "benchmark": {
+      "warmup_iters": 3,
+      "batch_size": 1,
+      "max_samples": 50
+    },
+    "profiling": {
+      "enabled": true,
+      "profiler_type": "timer"
+    },
+    "monitoring": {
+      "enabled": true,
+      "system": true,
+      "thermal": true,
+      "sample_interval_ms": 100
+    },
+    "reporting": {
+      "formats": [
+        "json",
+        "csv"
+      ]
+    },
+    "evaluation": {
+      "iou_thresholds": [
+        0.5,
+        0.55,
+        0.6,
+        0.65,
+        0.7,
+        0.75,
+        0.8,
+        0.85,
+        0.9,
+        0.95
+      ]
+    },
+    "visualization": {
+      "enabled": false,
+      "show_window": false,
+      "wait_key_ms": 1
+    }
+  }
+}

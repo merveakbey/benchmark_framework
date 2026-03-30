@@ -1,0 +1,361 @@
+{
+  "run_metadata": {
+    "run_name": "yolo26nvisdroneboat_tensorrt_cuda_int8",
+    "task_type": "detection",
+    "backend": "tensorrt",
+    "precision": "int8",
+    "model_name": "yolo26nvisdroneboat",
+    "model_path": "/home/merve/benchmark_framework/models/yolo26nvisdroneboat_int8.engine",
+    "dataset_name": "visdrone",
+    "input_size": [
+      640,
+      640
+    ],
+    "output_dir": "outputs/runs/yolo26nvisdroneboat_tensorrt_cuda_int8"
+  },
+  "dataset_metadata": {
+    "dataset_type": "visdrone",
+    "split": "val",
+    "num_images": 548,
+    "num_classes": 11,
+    "image_dir": "/home/merve/benchmark_framework/data/VisDrone2019-DET-val/images",
+    "annotation_dir": "/home/merve/benchmark_framework/data/VisDrone2019-DET-val/annotations"
+  },
+  "evaluation_summary": {
+    "status": "coco_style_evaluation_ready",
+    "num_predictions": 1083,
+    "num_ground_truths": 2467,
+    "tp": 751,
+    "fp": 332,
+    "fn": 1716,
+    "precision": 0.693444,
+    "recall": 0.304418,
+    "map_50": 0.20232,
+    "map_50_95": 0.143208,
+    "iou_thresholds": [
+      0.5,
+      0.55,
+      0.6,
+      0.65,
+      0.7,
+      0.75,
+      0.8,
+      0.85,
+      0.9,
+      0.95
+    ]
+  },
+  "latency_summary": {
+    "stage_breakdown_ms": {
+      "image_read": {
+        "mean": 0.0014,
+        "min": 0.0008,
+        "max": 0.0058,
+        "count": 50
+      },
+      "preprocess": {
+        "mean": 0.0006,
+        "min": 0.0005,
+        "max": 0.0012,
+        "count": 50
+      },
+      "inference": {
+        "mean": 5.0605,
+        "min": 4.5756,
+        "max": 6.7817,
+        "count": 50
+      },
+      "postprocess": {
+        "mean": 0.1505,
+        "min": 0.0496,
+        "max": 0.2314,
+        "count": 50
+      },
+      "full_pipeline": {
+        "mean": 5.2371,
+        "min": 4.7372,
+        "max": 6.9529,
+        "count": 50
+      }
+    },
+    "extra_values": {
+      "num_predictions": {
+        "mean": 21.66,
+        "min": 3,
+        "max": 86,
+        "count": 50
+      }
+    },
+    "inference_fps": 197.6089,
+    "avg_fps": 190.9454
+  },
+  "monitoring_summary": {
+    "monitor_0": {
+      "sample_count": 7,
+      "sampling_interval_ms": 100,
+      "cpu_percent": {
+        "mean": 13.4143,
+        "min": 0.0,
+        "peak": 34.9
+      },
+      "process_ram_mb": {
+        "mean": 1090.4029,
+        "min": 479.9883,
+        "peak": 1264.125
+      },
+      "system_ram_used_mb": {
+        "mean": 5199.0067,
+        "min": 4766.6602,
+        "peak": 5338.3203
+      },
+      "system_ram_percent": {
+        "mean": 39.8429,
+        "min": 36.7,
+        "peak": 40.9
+      },
+      "temperature_c": {
+        "mean": 87.0179,
+        "min": 86.75,
+        "peak": 87.625
+      }
+    }
+  },
+  "classwise_metrics": {
+    "pedestrian": {
+      "ap50": 0.361158,
+      "ap50_95": 0.178051,
+      "tp": 391,
+      "fp": 205,
+      "fn": 575,
+      "precision": 0.65604,
+      "recall": 0.404762,
+      "num_predictions": 596,
+      "num_ground_truths": 966
+    },
+    "people": {
+      "ap50": 0.028076,
+      "ap50_95": 0.010227,
+      "tp": 16,
+      "fp": 15,
+      "fn": 469,
+      "precision": 0.516129,
+      "recall": 0.03299,
+      "num_predictions": 31,
+      "num_ground_truths": 485
+    },
+    "bicycle": {
+      "ap50": 0.0,
+      "ap50_95": 0.0,
+      "tp": 0,
+      "fp": 0,
+      "fn": 54,
+      "precision": 0.0,
+      "recall": 0.0,
+      "num_predictions": 0,
+      "num_ground_truths": 54
+    },
+    "car": {
+      "ap50": 0.66277,
+      "ap50_95": 0.498708,
+      "tp": 298,
+      "fp": 76,
+      "fn": 130,
+      "precision": 0.796791,
+      "recall": 0.696262,
+      "num_predictions": 374,
+      "num_ground_truths": 428
+    },
+    "van": {
+      "ap50": 0.220677,
+      "ap50_95": 0.190376,
+      "tp": 10,
+      "fp": 19,
+      "fn": 21,
+      "precision": 0.344828,
+      "recall": 0.322581,
+      "num_predictions": 29,
+      "num_ground_truths": 31
+    },
+    "truck": {
+      "ap50": 0.619802,
+      "ap50_95": 0.481584,
+      "tp": 6,
+      "fp": 5,
+      "fn": 3,
+      "precision": 0.545455,
+      "recall": 0.666667,
+      "num_predictions": 11,
+      "num_ground_truths": 9
+    },
+    "tricycle": {
+      "ap50": 0.071782,
+      "ap50_95": 0.043069,
+      "tp": 3,
+      "fp": 1,
+      "fn": 39,
+      "precision": 0.75,
+      "recall": 0.071429,
+      "num_predictions": 4,
+      "num_ground_truths": 42
+    },
+    "awning-tricycle": {
+      "ap50": 0.0,
+      "ap50_95": 0.0,
+      "tp": 0,
+      "fp": 2,
+      "fn": 39,
+      "precision": 0.0,
+      "recall": 0.0,
+      "num_predictions": 2,
+      "num_ground_truths": 39
+    },
+    "motor": {
+      "ap50": 0.058934,
+      "ap50_95": 0.030064,
+      "tp": 27,
+      "fp": 9,
+      "fn": 385,
+      "precision": 0.75,
+      "recall": 0.065534,
+      "num_predictions": 36,
+      "num_ground_truths": 412
+    },
+    "boat": {
+      "ap50": 0.0,
+      "ap50_95": 0.0,
+      "tp": 0,
+      "fp": 0,
+      "fn": 1,
+      "precision": 0.0,
+      "recall": 0.0,
+      "num_predictions": 0,
+      "num_ground_truths": 1
+    }
+  },
+  "artifacts": {},
+  "debug_info": {
+    "raw_output_examples": [
+      {
+        "type": "<class 'numpy.ndarray'>",
+        "shape": [
+          1,
+          300,
+          6
+        ]
+      },
+      {
+        "type": "<class 'numpy.ndarray'>",
+        "shape": [
+          1,
+          300,
+          6
+        ]
+      },
+      {
+        "type": "<class 'numpy.ndarray'>",
+        "shape": [
+          1,
+          300,
+          6
+        ]
+      }
+    ]
+  },
+  "config_snapshot": {
+    "run": {
+      "name": "yolo26nvisdroneboat_tensorrt_cuda_int8",
+      "output_root": "./outputs/runs",
+      "global_summary_path": "./outputs/comparisons/all_runs_summary.csv"
+    },
+    "task": {
+      "type": "detection",
+      "model_family": "yolo"
+    },
+    "model": {
+      "name": "yolo26nvisdroneboat",
+      "format": "engine",
+      "path": "/home/merve/benchmark_framework/models/yolo26nvisdroneboat_int8.engine",
+      "precision": "int8",
+      "input_size": [
+        640,
+        640
+      ],
+      "class_names": [
+        "pedestrian",
+        "people",
+        "bicycle",
+        "car",
+        "van",
+        "truck",
+        "tricycle",
+        "awning-tricycle",
+        "bus",
+        "motor",
+        "boat"
+      ]
+    },
+    "backend": {
+      "type": "tensorrt",
+      "device": "cuda"
+    },
+    "dataset": {
+      "type": "visdrone",
+      "root_dir": "/home/merve/benchmark_framework/data/VisDrone2019-DET-val",
+      "split": "val",
+      "image_dir": "/home/merve/benchmark_framework/data/VisDrone2019-DET-val/images",
+      "annotation_dir": "/home/merve/benchmark_framework/data/VisDrone2019-DET-val/annotations"
+    },
+    "pipeline": {
+      "preprocess": {
+        "letterbox": true,
+        "normalize": true,
+        "color_format": "rgb"
+      },
+      "postprocess": {
+        "conf_threshold": 0.25,
+        "iou_threshold": 0.45,
+        "max_det": 300
+      }
+    },
+    "benchmark": {
+      "warmup_iters": 3,
+      "batch_size": 1,
+      "max_samples": 50
+    },
+    "profiling": {
+      "enabled": true,
+      "profiler_type": "timer"
+    },
+    "monitoring": {
+      "enabled": true,
+      "system": true,
+      "thermal": true,
+      "sample_interval_ms": 100
+    },
+    "reporting": {
+      "formats": [
+        "json",
+        "csv"
+      ]
+    },
+    "evaluation": {
+      "iou_thresholds": [
+        0.5,
+        0.55,
+        0.6,
+        0.65,
+        0.7,
+        0.75,
+        0.8,
+        0.85,
+        0.9,
+        0.95
+      ]
+    },
+    "visualization": {
+      "enabled": false,
+      "show_window": false,
+      "wait_key_ms": 1
+    }
+  }
+}
