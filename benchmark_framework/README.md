@@ -362,7 +362,6 @@ Framework'ün ana gereksinimleri büyük ölçüde karşılanmış olsa da bazı
 
 - Tracy ile tam fonksiyon seviyesinde enstrümantasyon henüz temel kullanım seviyesinde / opsiyoneldir.
 - Tüm platformlar için standart NPU yük metriği henüz tek tip değildir.
-- Tüm model ailelerine uygulanabilecek tamamen genel bir postprocess şablonu henüz daha fazla genişletmeye açıktır.
 
 Bununla birlikte mevcut mimari, yeni backend, evaluator ve raporlama tipleri eklemeye uygundur.
 
