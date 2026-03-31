@@ -1,2 +1,0 @@
-run_name,task_type,backend,precision_mode,dataset_type,split,num_images,num_predictions,num_ground_truths,tp,fp,fn,precision,recall,map_50,map_50_95,avg_full_pipeline_ms,avg_image_read_ms,avg_preprocess_ms,avg_inference_ms,avg_postprocess_ms,monitor_count,output_dir
-yolo26nvisdroneboat_rknn_rk3588,detection,rknn,unknown,visdrone,val,548,392,1066,246,146,820,0.627551,0.230769,0.103161,0.066766,50.6539,0.002,4.0524,44.2084,2.3693,,outputs/runs/yolo26nvisdroneboat_rknn_rk3588_unknown
